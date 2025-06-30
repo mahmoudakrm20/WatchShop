@@ -6,22 +6,23 @@
 
 @if (products == null)
 {
-<h2>Loading...</h2>
+    <h2>Loading...</h2>
 }
-
-@if (products != null)
+else
 {
-	@foreach (var product in products)
-	{
-		<p>@product.Name - @product.Price</p>
-	}
+    <div class="products-container" style="display:flex; flex-wrap:wrap;">
+        @foreach (var product in products)
+        {
+            <ProductCard Product="product" />
+        }
+    </div>
 }
 
 @code {
-	private List<Product>? products;
-	protected override void OnInitialized()
-	{
-		products = ProductService.GetAll();
-	}
+    private List<Product>? products;
 
+    protected override void OnInitialized()
+    {
+        products = ProductService.GetAll();
+    }
 }
