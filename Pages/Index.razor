@@ -10,16 +10,33 @@
 }
 else
 {
+    @if (!string.IsNullOrEmpty(productShow))
+    {
+        <div class="custom-banner d-flex align-items-center justify-content-center gap-2">
+            <span class="me-2">🛒</span>
+            <span>✅ <strong>@productShow</strong> added to cart</span>
+        </div>
+    }
+
     <div class="products-container" style="display:flex; flex-wrap:wrap;">
         @foreach (var product in products)
         {
-            <ProductCard Product="product" />
+            <ProductCard Product="product" AddToCart="onAddtoCart" />
         }
     </div>
 }
 
 @code {
     private List<Product>? products;
+    private string? productShow = null;
+
+    private int cartCount = 0;
+    private void onAddtoCart(Product product)
+    {
+        cartCount++;
+        Console.WriteLine($"Added to cart: {product.Name}");
+        productShow = product.Name;
+    }
 
     protected override void OnInitialized()
     {
