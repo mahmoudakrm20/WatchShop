@@ -36,6 +36,27 @@ else
     }
 }
 
+<hr />
+<h5>Add a Review</h5>
+
+<EditForm Model="newReview" OnValidSubmit="HandleValidSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="mb-3">
+        <label class="form-label">Name</label>
+        <InputText class="form-control" @bind-Value="newReview.UserName" />
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Comment</label>
+        <InputTextArea class="form-control" @bind-Value="newReview.Comment" />
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Rating (1 - 5)</label>
+        <InputNumber class="form-control" @bind-Value="newReview.Rating" />
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+</EditForm>
 
 @code {
     [Parameter]
@@ -47,6 +68,14 @@ else
     {
         productReviews = ReviewService.GetReviewsForProduct(id);
     }
+    private void HandleValidSubmit()
+    {
+        newReview.ProductId = id;
+        ReviewService.AddReview(newReview);
+        newReview = new(); // Reset the form
+        LoadReviews();     
+    }
+
     protected override void OnInitialized()
     {
         product = ProductService.GetById(id);
