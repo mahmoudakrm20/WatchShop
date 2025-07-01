@@ -1,5 +1,6 @@
 ﻿@page "/product/{id:int}"
 @inject ProductService ProductService
+@inject ReviewService ReviewService
 
 <h3>ProductDetails</h3>
 @if (product == null)
@@ -15,13 +16,43 @@ else
         <p><strong>Price:</strong> $@product.Price</p>
     </div>
 }
+<hr />
+<h4>Reviews</h4>
+
+@if (productReviews.Count == 0)
+{
+    <p>No reviews yet.</p>
+}
+else
+{
+    @foreach (var review in productReviews)
+    {
+        <div class="border p-3 mb-2 rounded bg-light">
+            <strong>@review.UserName</strong> -
+            <span class="text-warning">★ @review.Rating</span>
+            <div>@review.Comment</div>
+            <small class="text-muted">@review.CreatedAt.ToShortDateString()</small>
+        </div>
+    }
+}
+
 
 @code {
     [Parameter]
     public int id { get; set; }
     private Product? product;
+    private List<Review> productReviews = new();
+    private Review newReview = new();
+    private void LoadReviews()
+    {
+        productReviews = ReviewService.GetReviewsForProduct(id);
+    }
     protected override void OnInitialized()
     {
         product = ProductService.GetById(id);
+        if (product != null)
+        {
+            LoadReviews();
+        }
     }
 }
