@@ -1,0 +1,27 @@
+﻿@page "/product/{id:int}"
+@inject ProductService ProductService
+
+<h3>ProductDetails</h3>
+@if (product == null)
+{
+    <p>Product not found.</p>
+}
+else
+{
+    <div class="container mt-4">
+        <h2>@product.Name</h2>
+        <img src="@product.ImgURL" style="max-width: 300px; height: auto;" />
+        <p class="mt-3">@product.Description</p>
+        <p><strong>Price:</strong> $@product.Price</p>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public int id { get; set; }
+    private Product? product;
+    protected override void OnInitialized()
+    {
+        product = ProductService.GetById(id);
+    }
+}
